@@ -152,26 +152,35 @@ namespace GameOfLife
             bool alive;
             int count, age;
 
-            alive = cells[row, column].IsAlive;
-            age = cells[row, column].Age;
+            var currentCell = cells[row, column];
+            alive = currentCell.IsAlive;
             count = CountNeighbors(row, column);
 
             if (alive && count < 2)
-                return new Cell(row, column, 0, false);
+            {
+                currentCell.Age = 0;
+                currentCell.IsAlive = false;
+            }
             
             if (alive && (count == 2 || count == 3))
             {
                 cells[row, column].Age++;
-                return new Cell(row, column, cells[row, column].Age, true);
+                currentCell.IsAlive = true;
             }
 
             if (alive && count > 3)
-                return new Cell(row, column, 0, false);
+            {
+                currentCell.Age = 0;
+                currentCell.IsAlive = true;
+            }
             
             if (!alive && count == 3)
-                return new Cell(row, column, 0, true);
+            {
+                currentCell.Age = 0;
+                currentCell.IsAlive = true;
+            }
             
-            return new Cell(row, column, 0, false);
+            return currentCell;
         }
 
         public void CalculateNextGeneration(int row, int column, ref bool isAlive, ref int age)     // OPTIMIZED
